@@ -649,7 +649,7 @@ function itemsDataTable(itemsJsonData) {
           "panorama": "https://pannellum.org/images/alma.jpg"
       });
     });
-      });
+    
 
       //add modal click to hero figure
       var heroFigure = $('.hero').attr('item');
