@@ -644,9 +644,10 @@ function itemsDataTable(itemsJsonData) {
       });
 
       $('#pages-container figure.pano').each(function( i ) {
-      const viewer = new Viewer({
-        container: document.querySelector('#viewer'),
-        panorama: 'images/room-4.jpg',
+        pannellum.viewer('panorama', {
+          "type": "equirectangular",
+          "panorama": "https://pannellum.org/images/alma.jpg"
+      });
     });
       });
 
