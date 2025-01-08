@@ -643,11 +643,57 @@ function itemsDataTable(itemsJsonData) {
           });
       });
 
-      $('#pages-container figure.pano').each(function( i ) {
-        pannellum.viewer('panorama', {
-          "type": "equirectangular",
-          "panorama": "https://pannellum.org/images/alma.jpg"
+      $('#pages-container article').each(function( i ) {
+        var panoID = $(this).attr('pageslug')+'-pano';
+        $(this).find('figure.pano').attr('id',panoID).each(function( i ) {
+          var thisItem = $(this).attr('item');
+          var thisImage = '';
+          
+          table.rows().eq( 0 ).each( function (idx) {
+            var rowData = table.row(idx).data();
+            if ( rowData.c[9].v === thisItem) {
+              if (rowData.c[8]) {
+                thisImage = rowData.c[8].v;
+              }
+              }
+            });
+            var markers = [];
+            $(this).parents('article').find('figure.pano-marker').each(function( i ) {
+              var marker = {};
+              var thisMarkerItem = $(this).attr('item');
+              marker.pitch=$(this).attr('pitch');
+              marker.yaw=$(this).attr('yaw');
+              marker.cssClass='custom-hotspot';
+              marker.createTooltipFunc = hotspot;
+              table.rows().eq( 0 ).each( function (idx) {
+                var rowData = table.row(idx).data();
+                if ( rowData.c[9].v === thisMarkerItem) {
+                  if (rowData.c[8]) {
+                    marker.createTooltipArgs = '<img src='+rowData.c[8].v+'>'
+                  }
+                  }
+                });
+              console.log(marker);
+              markers.push(marker);
+
+            });
+
+          pannellum.viewer(panoID, {
+            "type": "equirectangular",
+            "panorama": thisImage,
+            "hotSpots": markers
+        });
       });
+     // Hot spot creation function
+        function hotspot(hotSpotDiv, args) {
+          hotSpotDiv.classList.add('custom-tooltip');
+          var span = document.createElement('span');
+          span.innerHTML = args;
+          hotSpotDiv.appendChild(span);
+          //span.style.width = span.scrollWidth - 20 + 'px';
+          //span.style.marginLeft = -(span.scrollWidth - hotSpotDiv.offsetWidth) / 2 + 'px';
+          //span.style.marginTop = -span.scrollHeight - 12 + 'px';
+        } 
     });
     
 
