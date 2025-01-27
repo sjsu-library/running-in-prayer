@@ -191,7 +191,9 @@ button.next-page {
 .custom-hotspot {
   height: 50px;
   width: 50px;
-  background: #f00;
+  background: #fff;
+  background-image:url('images/butterflyiconsmall.png');
+  background-size: contain;
 }
 div.custom-tooltip span {
   visibility: hidden;
