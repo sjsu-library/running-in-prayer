@@ -671,6 +671,10 @@ function itemsDataTable(itemsJsonData) {
                   if (rowData.c[8]) {
                     marker.createTooltipArgs = '<img src='+rowData.c[8].v+'>'
                   }
+                   }
+                    if (rowData.c[4]) {
+                        marker.description = rowData.c[4].v;
+                    }
                   }
                 });
               console.log(marker);
