@@ -704,6 +704,19 @@ function itemsDataTable(itemsJsonData) {
 
 
                   }
+                  
+                  
+                  
+                  
+                  if (rowData.c[3]) {
+                    var h3 = $('<p>')
+                      .text(rowData.c[3].v)
+                      .appendTo(tooltipHTML);
+
+
+                  }
+
+                  
                   marker.createTooltipArgs = $(tooltipHTML).html();
                   }
                 });
