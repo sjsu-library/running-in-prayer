@@ -59,7 +59,7 @@ $(document).ready(function() {
     }
   });
 
-  // Close with a click outside
+  // Close the modal with a click anywhere outside
   document.addEventListener("click", (event) => {
     //when clicking outside the modal, the target is the modal. Otherwise the target is a child of the modal - this method doesn't result in bubbling up, so it only closes on a click outside
     if ($(event.target).is('dialog')) {
@@ -110,9 +110,9 @@ $(document).ready(function() {
 
       pages(pagesJsonData);
 
-      //end of pages
+      //end of building pages
 
-      //Query items sheet for collection items
+      //Third, query the items sheet for collection items
       var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/'+spreadsheetID+'/gviz/tq?gid='+itemsSheet+'&headers=1');
       query.send(function (response) {
         if (response.isError()) {
@@ -141,12 +141,16 @@ $(document).ready(function() {
   //end of google charts API call
   });
   } //end of if remote
+  //beginnging of if local - get data from the local JSON files
   else {
     console.log('Running Rondo Local');
+    //get the site data and configure the site
     $.getJSON("json/site.json", function(siteJsonData) {
       siteConfig(siteJsonData);
+      //get the pages data and build the pages
       $.getJSON("json/pages.json", function(pagesJsonData) {
         pages(pagesJsonData);
+        //get the items data and build the items table
         $.getJSON("json/items.json", function(itemsJsonData) {
           itemsDataTable(itemsJsonData);
 
@@ -160,8 +164,6 @@ $(document).ready(function() {
 
 //end of document.ready function
 });
-
-
 
 //functions called in the script
 
@@ -389,18 +391,21 @@ function pages(pagesJsonData) {
     else {
       pageQuery="";
     }
+    //create page slug - if there is no value, number the page
     if (page.c[3]) {
       pageSlug = page.c['3'].v;
     }
     else {
       pageSlug ="page-"+i
     }
+    //check if the page is a child of another page
     if (page.c['4']) {
       subPage = page.c['4'].v;
     }
     else {
       subPage = false;
     }
+    //check which page the page is a child of
     if (page.c['5']) {
       parent = page.c['5'].v;
     }
@@ -422,7 +427,6 @@ function pages(pagesJsonData) {
       .appendTo(li)
       .on( "click", function() {pageChange()});
 
-    console.log(parent);
     if (!subPage) {
       $(li).addClass('parent')
       var ul = $('<ul>')
@@ -433,7 +437,6 @@ function pages(pagesJsonData) {
     }
     else {
       var parentTitle = $('ul#pages li.menu-'+parent).find('a').attr('pageTitle');
-      //var parentSlug = $('ul#pages li.parent:last-child').find('a').attr('pageSlug');
       var parentSlug = parent;
       var parentQuery = $('ul#pages li.menu-'+parent).find('a').attr('pageQuery');
       $(li).find('a').attr('parentTitle', parentTitle);
@@ -457,7 +460,7 @@ function pages(pagesJsonData) {
 
     var header = $('<header>');
     var footer = $('<footer>');
-
+    //for child pages, add a link to the parent page in the article header
     if (subPage) {
       var parentPage = $('<a>')
         .text('Part of the section ' + parentTitle)
@@ -477,7 +480,7 @@ function pages(pagesJsonData) {
       .text(pageTitle)
       .appendTo(header);
 
-
+    //add previous and next buttons
     if (i>0) {
     var buttonPrevious = $('<button>')
       .text('Previous Page')
@@ -506,7 +509,7 @@ function pages(pagesJsonData) {
   });
   //remove empty ul elements from Menu
   $('ul.subpage-menu:empty').remove();
-
+  //after the pages are built, open the page indicated by the URL query
   openPageFromQuery();
 
 };
@@ -539,6 +542,7 @@ function openPageFromQuery() {
 
 //function to build the datatable of items
 function itemsDataTable(itemsJsonData) {
+    //First set the initial search for the table. if there is a page in the query, the slug of that page becomes the initial search
     var initialSearch = {"columns": [0,1,2,3,4,7,10,11,12,13,14,15,16,17]};
     if (openPage) {
       var thisPageQuery = $('article.'+openPage).attr('pagequery');
@@ -546,11 +550,12 @@ function itemsDataTable(itemsJsonData) {
           initialSearch = {"preDefined": { "criteria": [ { "condition": "contains", "data": "Keywords", "type": "string", "value": [ thisPageQuery ] } ], "logic": "AND" }, "columns": [0,1,2,3,4,7,10,11,12,13,14,15,16,17]};
     }
   }
+  //If there's no page, use the slug from the homepage
   else if (homeQuery) {
     initialSearch = {"preDefined": { "criteria": [ { "condition": "contains", "data": "Keywords", "type": "string", "value": [ homeQuery ] } ], "logic": "AND" }, "columns": [0,1,2,3,4,7,10,11,12,13,14,15,16,17]};
   };
 
-    //create datatable from sheet data
+    //create datatable from sheet data - uses the DataTables library
     itemsTable = $('#items').DataTable({
       data: itemsJsonData.rows,
       dom: 'fQtipr',
@@ -620,13 +625,15 @@ function itemsDataTable(itemsJsonData) {
       });
 
 
-      //after the table is built, we use the data in the table to create the embeded items in each page
+      //after the table is built, we use the data in the table to create the embeded items in each page. This includes the 360 images
 
       var tableData=this.api().rows().data();
+      //use jquery to match any figures that have the class 'include-item' and display the appropriate image
       $('#pages-container figure.include-item').each(function( i ) {
         var thisFigure = $(this);
+        //the item information is stored in the attribute item
         var thisItem = $(this).attr('item');
-
+        //find the matching item in the datatable
         table.rows().eq( 0 ).each( function (idx) {
           var rowData = table.row(idx).data();
           if ( rowData.c[9].v === thisItem) {
@@ -636,19 +643,20 @@ function itemsDataTable(itemsJsonData) {
             else if (rowData.c[5]) {
                 thisFigure.html('<img src="'+rowData.c[5].v+'" alt="'+rowData.c[0].v+'"/><figcaption>'+rowData.c[0].v+'</figcaption>');
             };
+            //add link to click into modal view - shows the item and metadata
             thisFigure.on('click', function() {
               modalBuild(rowData);
             });
             }
           });
       });
-
+      //build panoramas for figures with class 'pano'. First build the panorama, then add marekers based on the figures that follow with class 'pano-marker'
       $('#pages-container article').each(function( i ) {
         var panoID = $(this).attr('pageslug')+'-pano';
         $(this).find('figure.pano').attr('id',panoID).each(function( i ) {
           var thisItem = $(this).attr('item');
           var thisImage = '';
-          
+          //search the datatable for the matching item
           table.rows().eq( 0 ).each( function (idx) {
             var rowData = table.row(idx).data();
             if ( rowData.c[9].v === thisItem) {
@@ -657,18 +665,24 @@ function itemsDataTable(itemsJsonData) {
               }
               }
             });
+            //markers are placed in an array
             var markers = [];
+            //find the figures with class 'pano-marker'
             $(this).parents('article').find('figure.pano-marker').each(function( i ) {
               var marker = {};
+              //get the item from the attribute 'item'
               var thisMarkerItem = $(this).attr('item');
+              //get the variables for marker location from the attributes of the figure
               marker.pitch=$(this).attr('pitch');
               marker.yaw=$(this).attr('yaw');
               marker.cssClass='custom-hotspot';
               marker.createTooltipFunc = hotspot;
+              //search the datatable for the matching item
               table.rows().eq( 0 ).each( function (idx) {
                 var rowData = table.row(idx).data();
                 if ( rowData.c[9].v === thisMarkerItem) {
                   if (rowData.c[8]) {
+                    //create the html that will go in the marker tooltip
                     marker.createTooltipArgs = '<img src='+rowData.c[8].v+'>'
                   }
                   }
@@ -677,14 +691,14 @@ function itemsDataTable(itemsJsonData) {
               markers.push(marker);
 
             });
-
+          //use pannellum to display the panorama.  
           pannellum.viewer(panoID, {
             "type": "equirectangular",
-            "panorama": thisImage,
-            "hotSpots": markers
+            "panorama": thisImage, //the image from the item for the panorama
+            "hotSpots": markers // the array of markers creaed above
         });
       });
-     // Hot spot creation function
+     // Hot spot creation function - this allows for the custom toolips
         function hotspot(hotSpotDiv, args) {
           hotSpotDiv.classList.add('custom-tooltip');
           var span = document.createElement('span');
@@ -700,6 +714,7 @@ function itemsDataTable(itemsJsonData) {
       //add modal click to hero figure
       var heroFigure = $('.hero').attr('item');
       if (heroFigure) {
+        //find the hero item on the datatable
         table.rows().eq( 0 ).each( function (idx) {
           var rowData = table.row(idx).data();
           if ( rowData.c[9].v === heroFigure) {
@@ -710,7 +725,7 @@ function itemsDataTable(itemsJsonData) {
           }
       });
     };
-
+      //Extra html to support formmatting for the advanced search
       $('.dtsb-searchBuilder').wrap('<details class="advanced"</details>');
       $('.advanced').append('<summary role="button">Filter / Advanced Search</summary>');
 
