@@ -677,14 +677,34 @@ function itemsDataTable(itemsJsonData) {
               marker.yaw=$(this).attr('yaw');
               marker.cssClass='custom-hotspot';
               marker.createTooltipFunc = hotspot;
+              var tooltipHTML = $('<div>')
+                .addClass("TooltipDiv");
+
+
+
+
+
               //search the datatable for the matching item
               table.rows().eq( 0 ).each( function (idx) {
                 var rowData = table.row(idx).data();
                 if ( rowData.c[9].v === thisMarkerItem) {
                   if (rowData.c[8]) {
                     //create the html that will go in the marker tooltip
-                    marker.createTooltipArgs = '<img src='+rowData.c[8].v+'>'
+                    //marker.createTooltipArgs = '<img src='+rowData.c[8].v+'>'
+                    var image = $('<img>')
+                      .attr("src", rowData.c[8].v)
+                      .appendTo(tooltipHTML);
+
+                  
                   }
+                  if (rowData.c[0]) {
+                    var h3 = $('<h3>')
+                      .text(rowData.c[0].v)
+                      .appendTo(tooltipHTML);
+
+
+                  }
+                  marker.createTooltipArgs = $(tooltipHTML).html();
                   }
                 });
               console.log(marker);
