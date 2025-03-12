@@ -188,9 +188,9 @@ button.next-page {
   height: 400px;
 }
 .custom-hotspot {
-  height: 50px;
-  width: 50px;
-  border-radius: 50px;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
   background: #fff;
   background-image:url('images/info_hotspot_single.png');
   background-size: contain;
