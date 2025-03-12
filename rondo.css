@@ -192,7 +192,7 @@ button.next-page {
   width: 50px;
   border-radius: 50px;
   background: #fff;
-  background-image:url('images/butterflyiconsmall.png');
+  background-image:url('images/info_hotspot_single.png');
   background-size: contain;
 }
 div.custom-tooltip span {
