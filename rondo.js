@@ -187,7 +187,9 @@ function pageChange() {
   $('details').removeAttr('open');
   document.title = articleTitle + " - "+header
   $('article.' + slug + ' h2').trigger('focus');
-  $('figure.hero').hide();
+  if (slug != "home") {
+    $('figure.hero').hide();
+  }
   $('body').animate(
     {
       scrollTop: $('article.' + slug).offset().top,
