@@ -187,7 +187,10 @@ function pageChange() {
   $('details').removeAttr('open');
   document.title = articleTitle + " - "+header
   $('article.' + slug + ' h2').trigger('focus');
-  if (slug != "home") {
+  if (slug == "home") {
+    $('figure.hero').show();
+  }
+  else {
     $('figure.hero').hide();
   }
   $('body').animate(
