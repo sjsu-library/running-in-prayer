@@ -4,12 +4,20 @@ body {
 
 body header {
   padding-bottom: 0px;
+  background-color: #000
 }
 
 body main {
   padding-top: 0px;
 }
 
+h1 {
+  color: #fff;
+}
+
+h2 {
+  color: #ffeaca;
+}
 
 kbd {
   background-color: transparent;
