@@ -11,6 +11,10 @@ body main {
   padding-top: 0px;
 }
 
+:modal {
+  background-color: #000000
+}
+
 h1 {
   color: #fff;
 }
