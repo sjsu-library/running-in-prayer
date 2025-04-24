@@ -49,7 +49,7 @@
   --pico-ins-color: rgb(28.5, 105.5, 84);
   --pico-del-color: rgb(136, 56.5, 53);
   --pico-blockquote-border-color: var(--pico-muted-border-color);
-  --pico-blockquote-footer-color: var(--pico-muted-color);
+  --pico-blockquote-footer-color: black;
   --pico-button-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   --pico-button-hover-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   --pico-table-border-color: var(--pico-muted-border-color);
@@ -176,7 +176,7 @@
     --pico-ins-color: #62af9a;
     --pico-del-color: rgb(205.5, 126, 123);
     --pico-blockquote-border-color: var(--pico-muted-border-color);
-    --pico-blockquote-footer-color: var(--pico-muted-color);
+    --pico-blockquote-footer-color: black;
     --pico-button-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
     --pico-button-hover-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
     --pico-table-border-color: var(--pico-muted-border-color);
@@ -311,7 +311,7 @@
   --pico-ins-color: #62af9a;
   --pico-del-color: rgb(205.5, 126, 123);
   --pico-blockquote-border-color: var(--pico-muted-border-color);
-  --pico-blockquote-footer-color: var(--pico-muted-color);
+  --pico-blockquote-footer-color: black;
   --pico-button-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   --pico-button-hover-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   --pico-table-border-color: var(--pico-muted-border-color);
