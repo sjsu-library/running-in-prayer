@@ -3,7 +3,7 @@
 :host(:not([data-theme=dark])) {
   color-scheme: light;
   --pico-background-color: #fff;
-  --pico-color: #373c44;
+  --pico-color: #00ff22;
   --pico-text-selection-color: rgba(2, 154, 232, 0.25);
   --pico-muted-color: #646b79;
   --pico-muted-border-color: rgb(231, 234, 239.5);
@@ -25,10 +25,10 @@
   --pico-secondary-hover-background: #48536b;
   --pico-secondary-hover-border: var(--pico-secondary-hover-background);
   --pico-secondary-hover-underline: var(--pico-secondary-hover);
-  --pico-secondary-focus: rgba(93, 107, 137, 0.25);
+  --pico-secondary-focus: rgba(32, 240, 13, 0.25);
   --pico-secondary-inverse: #fff;
-  --pico-contrast: #181c25;
-  --pico-contrast-background: #181c25;
+  --pico-contrast: #09ff00;
+  --pico-contrast-background: #ff00dd;
   --pico-contrast-border: var(--pico-contrast-background);
   --pico-contrast-underline: rgba(24, 28, 37, 0.5);
   --pico-contrast-hover: #000;
