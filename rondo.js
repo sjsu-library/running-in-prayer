@@ -5,6 +5,10 @@ var siteSheet ='1569296108';
 var pagesSheet = '28080804';
 var itemsSheet = '0';
 
+// override source variable - used to select a source spreadsheet from the URL
+originalID = spreadsheetID; //store the original ID for later checking
+overrideSource = spreadsheetID; //this variable will be overwritten later if there is a source in the URL
+
 //remote variable - change this to run your site on loal json tiles - see Rondo Tools for more information
 var remote = true;
 
@@ -14,6 +18,7 @@ var homeQuery;
 var openPage;
 var header = document.title;
 var subhead = "";
+var queryString;
 
 //select markdown or HTML for page formatting
 var markdown = true;
@@ -32,6 +37,10 @@ $(document).ready(function() {
 
   //get the current from the URL -written to the variable openPage
   getQueries();
+  
+  //if there is a source specified in the URL, use that instead of the Spreadsheet ID
+  spreadsheetID = overrideSource;
+  
 
   //add a listener to capture the back and forward buttons in the browser
   window.addEventListener('popstate', () => {
@@ -169,6 +178,8 @@ $(document).ready(function() {
 
 //function to display the current page - called when page is changed via the menu
 function pageChange() {
+  console.log(originalID)
+  console.log(overrideSource)
   //get info needed for the script from the clicked html element
   var query =  $(event.target).attr('pagequery');
   var slug = $(event.target).attr('pageslug');
@@ -200,7 +211,12 @@ function pageChange() {
     800 //speed
   );
   //update the URL query
-  window.history.pushState(null, null, '?page='+slug);
+  if (spreadsheetID == originalID) {
+    window.history.pushState(null, null, '?page='+slug);
+  }
+  else {
+    window.history.pushState(null, null, '?source='+ overrideSource +'&page='+slug);
+  }
 }
 //function to change page by index number - called when using next and previous buttons on articles. largely the same as the function above, but we need to get the information differently
 function pageChangeIndex() {
@@ -226,7 +242,13 @@ function pageChangeIndex() {
     },
     800 //speed
   );
-  window.history.pushState(null, null, '?page='+slug);
+  //update the URL query
+  if (spreadsheetID == originalID) {
+    window.history.pushState(null, null, '?page='+slug);
+  }
+  else {
+    window.history.pushState(null, null, '?source='+ overrideSource +'&page='+slug);
+  }
 };
 
 //function to display item in modal popup - runs when user clicks an item. Rowdata is retrieved from the datatables API, meaning it is stored in the table and retrieved for the row that was clicked.
@@ -297,12 +319,17 @@ function modalBuild(rowData) {
   $('.item-modal').attr('open', '');
 };
 
-//get queries from URL - the only query used/stored state is the current page
+//get queries from URL - variables indicate the current page and allow for an override source spreadsheet
 function getQueries() {
   var queryString = window.location.search;
     if(queryString) {
       var urlParams = new URLSearchParams(queryString);
+      if (urlParams.get('page')) {
       openPage = urlParams.get('page').replace('%20',' ');
+      }
+      if (urlParams.get('source')) {
+      overrideSource = urlParams.get('source').replace('%20',' ');
+      }
     }
 };
 
@@ -334,18 +361,29 @@ function siteConfig (siteJsonData) {
     $('hgroup').prepend('<img class="header-image" src="'+headerImage+'">')
     $('#head').hide();
   }
-  //make the header group go to home by reloading the page with no queries
+  //make the header group go to home by reloading the page with no page queries
   $('hgroup *').on('click', function() {
-    window.location = window.location.href.split("?")[0];
+      //update the URL query
+    if (spreadsheetID == originalID) {
+      window.location = window.location.href.split("?")[0]; 
+    }
+    else {
+      window.location = window.location.href.split("?")[0]+'?source='+overrideSource;
+      homeOpen();
+    }
   });
 
 
   //set the hero image
   var heroItem='';
+  var caption='';
   if (siteConfigData[0].c['4']) {
     heroItem=siteConfigData[0].c['4'].v;
   };
-  $('.hero').attr('item', heroItem).html('<img src="' + siteConfigData[0].c['2'].v + '" alt="' + siteConfigData[0].c['3'].v + '"> <figcaption>' + siteConfigData[0].c['3'].v + '</figcaption>');
+  if (siteConfigData[0].c['3']) {
+    caption=siteConfigData[0].c['3'].v;
+  };
+  $('.hero').attr('item', heroItem).html('<img src="' + siteConfigData[0].c['2'].v + '" alt="' + caption + '"> <figcaption>' + caption + '</figcaption>');
 
   //set css variables - for more customization, edit the CSS. Refer to the Pico CSS documentation for guidance
   var r = document.querySelector(':root');
@@ -449,7 +487,6 @@ function pages(pagesJsonData) {
         .addClass('subpage-menu')
         .addClass('submenu-'+pageSlug)
         .appendTo(li);
-      console.log(subPage);
       $(li).appendTo('ul#pages li.menu-'+parent+' ul.submenu-'+parent);
     }
 
@@ -539,10 +576,14 @@ function openPageFromQuery() {
     }
   }
   else {
+    homeOpen();
+  };
+}
+//function to open the home page
+function homeOpen() {
     var firstPageHead = $('#pages-container article:nth-child(1) h2').text();
     $('.items-head').text(firstPageHead + ' - Related Items');
     $('figure.hero').show();
-  };
 }
 
 //function to build the datatable of items
