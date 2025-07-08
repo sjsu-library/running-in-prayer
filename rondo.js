@@ -253,8 +253,9 @@ function pageChangeIndex() {
 
 //function to display item in modal popup - runs when user clicks an item. Rowdata is retrieved from the datatables API, meaning it is stored in the table and retrieved for the row that was clicked.
 //This section may need to be changed when adding custom metadata fields
-function modalBuild(rowData) {
+function modalBuild(pointer, rowData) {
   //change the modal title
+  console.log(rowData)
   var thisTitle;
   if (rowData.c[0]) {
     thisTitle = rowData.c[0].v;
@@ -269,10 +270,10 @@ function modalBuild(rowData) {
   $('.modal-image').empty();
   //rewrite the values - add any custom fields here, and in the HTML
   if (rowData.c[8]) {
-    $('figure.modal-image').html('<img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/>');
+    $('figure.modal-image').html('<a href="'+rowData.c[8].v+'"><img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/></a>');
   }
   else if (rowData.c[5]) {
-      $('figure.modal-image').html('<img src="'+rowData.c[5].v+'" alt="'+thisTitle+'"/>');
+      $('figure.modal-image').html('<a href="'+rowData.c[5].v+'"><img src="'+rowData.c[5].v+'" alt="'+thisTitle+'"/></a>');
   };
   if (rowData.c[1]) {
     $('dd.rowDate').text(rowData.c[1].v);
@@ -658,7 +659,7 @@ function itemsDataTable(itemsJsonData) {
       //after every draw, we need to reasign the modal click to the current set of items
       $('#collection tr').on('click', function(){
         var rowData=itemsTable.row(this).data();
-        modalBuild(rowData);
+        modalBuild("none", rowData);
       });
     },
     "initComplete": function(settings, json) {
@@ -691,7 +692,7 @@ function itemsDataTable(itemsJsonData) {
             };
             //add link to click into modal view - shows the item and metadata
             thisFigure.on('click', function() {
-              modalBuild(rowData);
+              modalBuild('none', rowData);
             });
             }
           });
@@ -701,7 +702,7 @@ function itemsDataTable(itemsJsonData) {
         var panoID = $(this).attr('pageslug')+'-pano';
         $(this).find('figure.pano').attr('id',panoID).each(function( i ) {
           var thisItem = $(this).attr('item');
-          var thisImage = '';
+          //var thisImage = '';
           //search the datatable for the matching item
           table.rows().eq( 0 ).each( function (idx) {
             var rowData = table.row(idx).data();
@@ -722,51 +723,16 @@ function itemsDataTable(itemsJsonData) {
               marker.pitch=$(this).attr('pitch');
               marker.yaw=$(this).attr('yaw');
               marker.cssClass='custom-hotspot';
-              marker.createTooltipFunc = hotspot;
-              var tooltipHTML = $('<div>')
-                .addClass("TooltipDiv");
-
-
-
-
+            
 
               //search the datatable for the matching item
               table.rows().eq( 0 ).each( function (idx) {
                 var rowData = table.row(idx).data();
                 if ( rowData.c[9].v === thisMarkerItem) {
-                  if (rowData.c[8]) {
-                    //create the html that will go in the marker tooltip
-                    //marker.createTooltipArgs = '<img src='+rowData.c[8].v+'>'
-                    var image = $('<img>')
-                      .attr("src", rowData.c[8].v)
-                      .appendTo(tooltipHTML);
-
-                  
-                  }
-                  if (rowData.c[0]) {
-                    var h3 = $('<h3>')
-                      .text(rowData.c[0].v)
-                      .appendTo(tooltipHTML);
-
-
-                  }
-                  
-                  
-                  
-                  
-                  if (rowData.c[3]) {
-                    var h3 = $('<p>')
-                      .text(rowData.c[3].v)
-                      .appendTo(tooltipHTML);
-
-
-                  }
-
-                  
-                  marker.createTooltipArgs = $(tooltipHTML).html();
+                  marker.clickHandlerFunc = modalBuild;
+                  marker.clickHandlerArgs = rowData;
                   }
                 });
-              console.log(marker);
               markers.push(marker);
 
             });
