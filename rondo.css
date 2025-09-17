@@ -223,7 +223,7 @@ div.custom-tooltip:hover span:after {
 
 }
 
-footer {
+footer.container {
   text-align: left;
   padding: 3px;
   background-color: #141e26;
