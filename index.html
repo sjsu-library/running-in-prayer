@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html data-theme="dark">
   <head>
     <title>Rondo</title>
@@ -12,7 +13,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/sb-1.6.0/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-2.3.2/sb-1.8.3/datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
     <script src="rondo.js"></script>
@@ -65,10 +66,10 @@
     </section>
     </main>
 
-    <dialog class="item-modal">
+    <dialog class="item-modal" id="show-item">
     <article>
       <header>
-        <a href="#close" aria-label="Close" class="close"></a>
+        <a aria-label="Close" class="close"></a>
         <h3 id='modal-title'>Modal title</h3>
     </header>
     <figure class="modal-image">
@@ -123,7 +124,7 @@
   <dialog class = "rondo-tools">
     <article>
       <header>
-        <a href="#close" aria-label="Close" class="close"></a>
+        <a aria-label="Close" class="close"></a>
         <h3>Rondo Tools</h3>
       <header>
       <div class="localizing">
@@ -153,7 +154,7 @@
   <footer class="container">
       <small>Powered by Rondo</small>
         <br>
-      <small><a href="#" class="tools">Rondo Tools</a></small>
+      <small><a href="" class="tools">Rondo Tools</a></small>
   </footer>
 
   </body>

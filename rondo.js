@@ -19,6 +19,8 @@ var openPage;
 var header = document.title;
 var subhead = "";
 var queryString;
+var dialog;
+
 
 //select markdown or HTML for page formatting
 var markdown = true;
@@ -49,7 +51,7 @@ $(document).ready(function() {
     openPageFromQuery()
 
   });
-
+  
   //make the Rondo Tools link open the tools modal
   $('.tools').on('click',function(event) {
     event.preventDefault();
@@ -57,14 +59,18 @@ $(document).ready(function() {
   });
 
   //basic modal interactions
-
+  dialog = document.getElementById("show-item");
   $('dialog a.close').on('click', function(){
+    dialog.close('');
     $('.item-modal, .rondo-tools').removeAttr('open');
+    
   });
   // Close with Esc key
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
+      dialog.close();
       $('.item-modal, .rondo-tools').removeAttr('open');
+      
     }
   });
 
@@ -72,7 +78,9 @@ $(document).ready(function() {
   document.addEventListener("click", (event) => {
     //when clicking outside the modal, the target is the modal. Otherwise the target is a child of the modal - this method doesn't result in bubbling up, so it only closes on a click outside
     if ($(event.target).is('dialog')) {
+        dialog.close();
         $('.item-modal, .rondo-tools').removeAttr('open');
+        
       }
   });
 
@@ -189,6 +197,7 @@ function pageChange() {
   //hide all of the articles/pages and then show the selected page
   $('#pages-container article').hide();
   $('article.'+slug).show();
+  panoResize(slug);
 
   //create a storedsearch and use the search builder to select only the relevant items
   var storedSearch = { "criteria": [ { "condition": "contains", "data": "Keywords", "type": "string", "value": [ query ] } ], "logic": "AND" }
@@ -198,17 +207,18 @@ function pageChange() {
   $('details').removeAttr('open');
   document.title = articleTitle + " - "+header
   $('article.' + slug + ' h2').trigger('focus');
-  if (slug == "home") {
-    $('figure.hero').show();
-  }
-  else {
-    $('figure.hero').hide();
-  }
-  $('body').animate(
+       if ($('article.' + openPage).is(':first-child')) {
+          document.title = header;
+          $('figure.hero').show();
+        }
+        else {
+          $('figure.hero').hide();
+        }
+  $('html, body').animate(
     {
-      scrollTop: $('article.' + slug).offset().top,
+      scrollTop: 0
     },
-    800 //speed
+    600 //speed
   );
   //update the URL query
   if (spreadsheetID == originalID) {
@@ -228,6 +238,7 @@ function pageChangeIndex() {
   var articleTitle = myArticle.find('h2').text();
   $('#pages-container article').hide();
   $('article.'+slug).show();
+  panoResize(slug);
   //from here it is the same as above
   var storedSearch = { "criteria": [ { "condition": "contains", "data": "Keywords", "type": "string", "value": [ query ] } ], "logic": "AND" };
   itemsTable.search('').searchBuilder.rebuild(storedSearch).draw();
@@ -235,12 +246,18 @@ function pageChangeIndex() {
   $('details').removeAttr('open');
   document.title = articleTitle + " - "+header
   $('article.' + slug + ' h2').trigger('focus');
-  $('figure.hero').hide();
-  $('body').animate(
+  if ($('article.' + slug).is(':first-child')) {
+          document.title = header;
+          $('figure.hero').show();
+        }
+        else {
+          $('figure.hero').hide();
+     }
+  $('html, body').animate(
     {
-      scrollTop: $('article.' + slug).offset().top,
+      scrollTop: 0
     },
-    800 //speed
+    600 //speed
   );
   //update the URL query
   if (spreadsheetID == originalID) {
@@ -270,10 +287,29 @@ function modalBuild(pointer, rowData) {
   $('.modal-image').empty();
   //rewrite the values - add any custom fields here, and in the HTML
   if (rowData.c[8]) {
-    $('figure.modal-image').html('<a href="'+rowData.c[8].v+'"><img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/></a>');
+    console.log(rowData.c[8].v);
+    var extension = rowData.c[8].v.split('.').pop().trim();
+    
+    if (rowData.c[8].v.includes("https://www.youtube.com/watch?v=")){
+      console.log('youtube')
+      var youTubeID = rowData.c[8].v.split('=').pop();
+      console.log(youTubeID);
+      $('figure.modal-image').html('<iframe id="youtube-player" src="https://www.youtube.com/embed/"'+youTubeID+'>');
+    }
+    else if (extension == "png" || "jpg" || "jpeg" || "PNG" || "JPG" || "JPEG") {
+      $('figure.modal-image').html('<img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/>');
+      console.log('added image')
+    }
+    else if (extension == "pdf") {
+      $('figure.modal-image').html('<a target="_blank" role="button" href="'+rowData.c[8].v+'">View PDF</a>');
+    }
+    else {
+      console.log(extension);
+      $('figure.modal-image').html('<a target="_blank" role="button" href="'+rowData.c[8].v+'">Download File</a>');
+    }
   }
   else if (rowData.c[5]) {
-      $('figure.modal-image').html('<a href="'+rowData.c[5].v+'"><img src="'+rowData.c[5].v+'" alt="'+thisTitle+'"/></a>');
+      $('figure.modal-image').html('<img src="'+rowData.c[5].v+'" alt="'+thisTitle+'"/>');
   };
   if (rowData.c[1]) {
     $('dd.rowDate').text(rowData.c[1].v);
@@ -317,8 +353,19 @@ function modalBuild(pointer, rowData) {
   //hide the labels for empty fields
   $('dd:empty').prev().hide();
   //open the modal - this uses the Pico CSS modal implementation
-  $('.item-modal').attr('open', '');
+  //$('.item-modal').attr('open', '');
+
+  dialog.showModal();
+
 };
+
+function panoResize(slug) {
+        var viewerName= "viewer_"+slug.replace("-", "_")+'_pano';
+        var thisViewer = window[viewerName];
+        if(thisViewer){
+          thisViewer.resize();
+        };
+  };
 
 //get queries from URL - variables indicate the current page and allow for an override source spreadsheet
 function getQueries() {
@@ -353,8 +400,8 @@ function siteConfig (siteJsonData) {
   if (!openPage) {
     document.title = header;
     $('figure.hero').show();
-
   };
+
   //set the page header
   $('h1#head').text(header);
   $('h2#subhead').text(subhead);
@@ -467,7 +514,6 @@ function pages(pagesJsonData) {
       .attr('pagequery', pageQuery)
       .attr('pageslug', pageSlug)
       .attr('pagenavtype', 'menu')
-      .attr('href', '#')
       .appendTo(li)
       .on( "click", function() {pageChange()});
 
@@ -512,7 +558,6 @@ function pages(pagesJsonData) {
         .attr('pageslug', parentSlug)
         .attr('pagequery', parentQuery)
         .attr('pagenavtype', 'child')
-        .attr('href', '#')
         .on('click', function(){
           pageChange()
         })
@@ -567,13 +612,20 @@ function openPageFromQuery() {
         $('.items-head').text(articleTitle + ' - Related Items');
         $('article.'+ openPage +' h2').trigger('focus');
         document.title= articleTitle + " - " + header;
-        $('body').animate(
+        panoResize(openPage);
+        $('html, body').animate(
           {
-            scrollTop: $('article.' + openPage).offset().top,
+            scrollTop: 0
           },
-          800 //speed
+          600 //speed
         );
-        $('figure.hero').hide();
+        if ($('article.' + openPage).is(':first-child')) {
+          document.title = header;
+          $('figure.hero').show();
+        }
+        else {
+          $('figure.hero').hide();
+        }
     }
   }
   else {
@@ -605,9 +657,16 @@ function itemsDataTable(itemsJsonData) {
     //create datatable from sheet data - uses the DataTables library
     itemsTable = $('#items').DataTable({
       data: itemsJsonData.rows,
-      dom: 'fQtipr',
-      searchBuilder :
-        initialSearch,
+      //dom: 'fQtipr',
+     
+      //searchBuilder :
+        //initialSearch,
+      layout: {
+        topStart: {
+            searchBuilder: initialSearch
+                
+            }
+        },
       columns: [
         //The data for each row is stored in nested objects by column number
         { data: 'c.0.v', title: itemsJsonData.cols[0].label, name:'title', class: itemsJsonData.cols[0].label, defaultContent: '[Untitled]'},
@@ -657,6 +716,7 @@ function itemsDataTable(itemsJsonData) {
     },
     "drawCallback": function(settings, json) {
       //after every draw, we need to reasign the modal click to the current set of items
+      $('#collection tr').prop("onclick", null).off("click");
       $('#collection tr').on('click', function(){
         var rowData=itemsTable.row(this).data();
         modalBuild("none", rowData);
@@ -699,7 +759,8 @@ function itemsDataTable(itemsJsonData) {
       });
       //build panoramas for figures with class 'pano'. First build the panorama, then add marekers based on the figures that follow with class 'pano-marker'
       $('#pages-container article').each(function( i ) {
-        var panoID = $(this).attr('pageslug')+'-pano';
+        var panoID = $(this).attr('pageslug')+'_pano';
+        panoID = panoID.replace("-", "_");
         $(this).find('figure.pano').attr('id',panoID).each(function( i ) {
           var thisItem = $(this).attr('item');
           //var thisImage = '';
@@ -737,11 +798,15 @@ function itemsDataTable(itemsJsonData) {
 
             });
           //use pannellum to display the panorama.  
-          pannellum.viewer(panoID, {
+          
+          window["viewer_"+panoID] = pannellum.viewer(panoID, {
             "type": "equirectangular",
             "panorama": thisImage, //the image from the item for the panorama
-            "hotSpots": markers // the array of markers creaed above
+            "hotSpots": markers, // the array of markers creaed above
+            "autoLoad": true
         });
+        console.log ("viewer_"+panoID);
+        console.log (window["viewer_"+panoID]);
       });
      // Hot spot creation function - this allows for the custom toolips
         function hotspot(hotSpotDiv, args) {

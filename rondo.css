@@ -30,9 +30,9 @@ kbd {
   margin: auto;
 }
 
-
-#pages-container article header {
-  padding-top:120px;
+article {
+  box-shadow: none;
+  border: 1px solid var(--muted-border-color);
 }
 
 @media (max-width: 991px){
@@ -113,6 +113,9 @@ figure.hero {
 #pages-container figure img {
   max-height: 500px;
 }
+figure.pano-marker {
+  margin-bottom:0;
+}
 
 #pages-container footer {
   display: flex;
@@ -131,6 +134,7 @@ button.next-page {
 .show-all {
   width: 25%;
   float: right;
+  margin-left: 5%;
 }
 
 .advanced {
@@ -142,6 +146,10 @@ button.next-page {
   text-align: left;
   margin: 0.5%;
   width:99%;
+}
+
+table.dataTable {
+    display: block;
 }
 
 #items thead {
@@ -156,14 +164,39 @@ button.next-page {
 #items tr {
   flex-basis:48%;
   flex-wrap: wrap;
+  min-width:300px;
+  flex-grow: 3;
   margin:1%;
+  background-color: var(--card-sectionning-background-color);
+  border: 1px solid var(--muted-border-color);
   padding: 10px;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 991px) {
+  #items tr {
+  flex-grow: 3;
+  }
+  #items td img {
+    max-height:100px;
+  }
+  #items td.Thumbnail {
+    width: 24%;
+  }
+  #items td.Title {
+    width:74%;
+  }
 }
 
 #items td {
   display: block;
   border: 0px;
+  width: 49%;
+  font-family: nimbus-sans-condensed, sans-serif;
+  font-weight: 700;
+  line-height: 1.25rem;
 }
 
 #items td.thumbnail {
@@ -172,22 +205,30 @@ button.next-page {
 .dataTables_info {
   padding:20px;
 }
-
-.dataTables_paginate {
+.dt-info {
+  margin-bottom: 10px;
 }
 
-.dataTables_paginate, .dataTables_paginate span {
-  display: flex;
+.dt-paging-button.current {
+  color:var(--primary-inverse);
 }
-.dataTables_paginate a, .dataTables_paginate span a{
-  padding:20px;
-  text-align: center;
+.dt-paging-button {
+  width:12%;
+  margin:0;
+}
+
+.item-modal {
+  overflow:hidden;
 }
 
 #panorama {
   width: 600px;
   height: 400px;
 }
+.pnlm-container {
+  min-height:500px;
+}
+
 .custom-hotspot {
   height: 25px;
   width: 25px;
