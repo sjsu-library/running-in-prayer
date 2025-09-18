@@ -297,7 +297,7 @@ function modalBuild(pointer, rowData) {
       $('figure.modal-image').html('<iframe id="youtube-player" src="https://www.youtube.com/embed/"'+youTubeID+'>');
     }
     else if (extension == "png" || "jpg" || "jpeg" || "PNG" || "JPG" || "JPEG") {
-      $('figure.modal-image').html('<a href="'+rowData.c[8].v+'<img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/></a>');
+      $('figure.modal-image').html('<a href="'+rowData.c[8].v+'><img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/></a>');
       console.log('added image')
     }
     else if (extension == "pdf") {
