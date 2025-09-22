@@ -207,7 +207,7 @@ function pageChange() {
   $('details').removeAttr('open');
   document.title = articleTitle + " - "+header
   $('article.' + slug + ' h2').trigger('focus');
-       if ($('article.' + openPage).is(':first-child')) {
+       if ($('article.' + slug).is(':first-child')) {
           document.title = header;
           $('figure.hero').show();
         }
