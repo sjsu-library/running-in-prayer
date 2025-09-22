@@ -292,9 +292,9 @@ function modalBuild(pointer, rowData) {
     
     if (rowData.c[8].v.includes("https://www.youtube.com/watch?v=")){
       console.log('youtube')
-      var youTubeID = rowData.c[8].v.split('=').pop();
+      var youTubeID = rowData.c[8].v.split('v=').pop();
       console.log(youTubeID);
-      $('figure.modal-image').html('<iframe id="youtube-player" src="https://www.youtube.com/embed/"'+youTubeID+'>');
+      $('figure.modal-image').html('<iframe width="560" height="315" src="https://www.youtube.com/embed/'+youTubeID+'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>')
     }
     else if (extension == "png" || "jpg" || "jpeg" || "PNG" || "JPG" || "JPEG") {
       $('figure.modal-image').html('<a href="'+rowData.c[8].v+'"><img src="'+rowData.c[8].v+'" alt="'+thisTitle+'"/></a>');
