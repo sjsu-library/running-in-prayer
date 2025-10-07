@@ -35,6 +35,22 @@ const md = markdownit({
 //Consists of three nested calls to the Google Sheets Visualization API - first for site settings/configuration, then for pages, and last for items.
 $(document).ready(function() {
 
+  function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less";
+    moreText.style.display = "inline";
+  }
+}
+
 
 
   //get the current from the URL -written to the variable openPage
