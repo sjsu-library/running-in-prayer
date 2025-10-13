@@ -270,14 +270,28 @@ footer.container {
   background-color: #141e26;
   color: white;
 }
-
+.row {
+     display: flex;
+    column-gap: 3%;
+    flex-wrap: wrap;
+    justify-content:space-between;
+}
 
 /* Three image containers (use 25% for four, and 50% for two, etc) */
 .column {
-  float: left;
+  /*float: left;
   width: 33.3%;
-  padding: 20px;
+  padding: 20px;*/
+      flex-basis: 31%;
+    min-width: 250px;
 }
+@media (max-width: 766px) {
+  .column {
+    flex-basis:100%;
+  }
+}
+
+
 
 /* Clear floats after image containers */
 .row::after {
@@ -288,4 +302,4 @@ footer.container {
 
 
 
-#more {display: none;}
+.more {display: none;}

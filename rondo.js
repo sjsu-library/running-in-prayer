@@ -611,6 +611,20 @@ function pages(pagesJsonData) {
 
   //end of pages loop
   });
+  //add read more buttons to class moreBtn
+  $('.moreBtn').click(function() {
+  // Code to be executed when the element is clicked
+    $(this).parent().prev().find('span.dots').toggle();
+    $(this).parent().prev().find('span.more').toggle();
+    if ($(this).text() == 'Read more'){
+      $(this).text('Read less');
+    }
+    else {
+      $(this).text('Read more');
+    }
+
+  });
+
   //remove empty ul elements from Menu
   $('ul.subpage-menu:empty').remove();
   //after the pages are built, open the page indicated by the URL query
@@ -864,19 +878,3 @@ function itemsDataTable(itemsJsonData) {
   });
 }
 
-
-function myFunction() {
-  var dots = document.getElementById("dots");
-  var moreText = document.getElementById("more");
-  var btnText = document.getElementById("myBtn");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = "Read more";
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = "Read less";
-    moreText.style.display = "inline";
-  }
-}
