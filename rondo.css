@@ -1,8 +1,9 @@
 body {
   padding-top:100px;
   background-image: url("images/vert_background.jpg");
-  background-repeat: repeat;
+  background-repeat: repeat-y;
   background-size: contain;
+  background-size: 200% 200%;
 }
 
 body header {
