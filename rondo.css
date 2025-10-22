@@ -1,6 +1,8 @@
 body {
   padding-top:100px;
   background-image: url("images/triangle_background.jpeg");
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 body header {
