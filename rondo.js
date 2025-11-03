@@ -230,6 +230,14 @@ function pageChange() {
         else {
           $('figure.hero').hide();
         }
+        //hide the datatable on the about page
+        if (slug=="about") {
+          $('section#collection article').hide()
+          console.log('about was the value')
+        }
+        else {
+          $('section#collection article').show()
+        }
   $('html, body').animate(
     {
       scrollTop: 0
@@ -269,6 +277,14 @@ function pageChangeIndex() {
         else {
           $('figure.hero').hide();
      }
+          //hide the datatable on the about page
+        if (slug=="about") {
+          $('section#collection article').hide()
+          console.log('about was the value')
+        }
+        else {
+          $('section#collection article').show()
+        }   
   $('html, body').animate(
     {
       scrollTop: 0
@@ -656,6 +672,15 @@ function openPageFromQuery() {
         else {
           $('figure.hero').hide();
         }
+        //hide the datatable on the about page
+        console.log(openPage);
+        if (openPage=="about") {
+          $('section#collection article').hide()
+          console.log('about was the value')
+        }
+        else {
+          $('section#collection article').show()
+        }
     }
   }
   else {
@@ -667,6 +692,7 @@ function homeOpen() {
     var firstPageHead = $('#pages-container article:nth-child(1) h2').text();
     $('.items-head').text(firstPageHead + ' - Related Items');
     $('figure.hero').show();
+    $('section#collection article').show();
 }
 
 //function to build the datatable of items
