@@ -19,7 +19,8 @@ body main {
 }
 
 div.acknowledgements {
-  line-height: 20px;
+  h4 {
+  margin-bottom: 20px;
 }
 
 
