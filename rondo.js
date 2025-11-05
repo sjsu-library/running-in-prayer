@@ -819,6 +819,9 @@ function itemsDataTable(itemsJsonData) {
         panoID = panoID.replace("-", "_");
         $(this).find('figure.pano').attr('id',panoID).each(function( i ) {
           var thisItem = $(this).attr('item');
+          console.log(thisItem)
+          var initialPitch = Number($(this).attr('pitch') ?? '0');
+          var initialYaw = Number($(this).attr('yaw') ?? '0');
           //var thisImage = '';
           //search the datatable for the matching item
           table.rows().eq( 0 ).each( function (idx) {
@@ -852,17 +855,17 @@ function itemsDataTable(itemsJsonData) {
                 });
               markers.push(marker);
 
-            });
+            }); 
           //use pannellum to display the panorama.  
           
           window["viewer_"+panoID] = pannellum.viewer(panoID, {
             "type": "equirectangular",
             "panorama": thisImage, //the image from the item for the panorama
-            "hotSpots": markers, // the array of markers creaed above
-            "autoLoad": true
+            "hotSpots": markers, // the array of markers created above
+            "autoLoad": true,
+            "pitch":    initialPitch,
+            "yaw":      initialYaw
         });
-        console.log ("viewer_"+panoID);
-        console.log (window["viewer_"+panoID]);
       });
      // Hot spot creation function - this allows for the custom toolips
         function hotspot(hotSpotDiv, args) {
