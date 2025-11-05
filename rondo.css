@@ -18,6 +18,10 @@ body main {
   min-height: 800px;
 }
 
+div.acknowledgements {
+  line-height: 20px;
+}
+
 
 
 kbd {
