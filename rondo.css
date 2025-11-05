@@ -18,7 +18,9 @@ body main {
   min-height: 800px;
 }
 
-
+h4 {
+  margin-bottom: 20px;
+}
 
 kbd {
   background-color: transparent;
