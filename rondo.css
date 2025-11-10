@@ -308,7 +308,7 @@ footer.container {
 .collaborators {
   display: flex;
   justify-content: center;  
-  gap: 80px;                
+  gap: 40px;                
   text-align: left;       
   margin-top: 20px;
 }
