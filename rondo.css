@@ -303,3 +303,12 @@ footer.container {
 
 
 .more {display: none;}
+
+
+.collaborators {
+  display: flex;
+  justify-content: center;  
+  gap: 80px;                
+  text-align: left;       
+  margin-top: 20px;
+}
