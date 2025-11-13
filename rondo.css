@@ -269,6 +269,7 @@ footer.container {
   padding: 3px;
   background-color: #141e26;
   color: white;
+  max-width: none;
 }
 .row {
      display: flex;
